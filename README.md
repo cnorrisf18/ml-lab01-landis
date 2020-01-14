@@ -1,2 +1,2 @@
-# ml-lab01-landis
+# ml-lab01-norris
 Machine Learning Lab set 01
