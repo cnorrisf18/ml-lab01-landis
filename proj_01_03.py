@@ -16,14 +16,14 @@ def double_letter_list(somestring):
 
 """
 Note that you can select these lines too and "run selection in console.  One at a time.
-
+"""
 double_letter_list("123")
 double_letter_list("abcdef")
 mylist = double_letter_list("12")
 
 double_letter_list(mylist)  # whoa.  Dude.
 
-"""
+
 
 # You can do the above as a list comprehension...  The above function could be replaced with this:
 #
@@ -41,7 +41,12 @@ double_letter_list(mylist)  # whoa.  Dude.
 
 def read_fileAsList( fname ):
     # Your code here:
-    return # ???
+    file = open(fname, "r")
+    line_list = []
+    for line in file:
+        line = line.rstrip("\n")
+        line_list.append(line)
+    return line_list
 
 """
 
@@ -56,7 +61,11 @@ def read_fileAsList( fname ):
 
 def read_fileAsList( fname ):
     # Your code here:
-    return # something?
+    with open(fname, "r") as file:
+        line_list = []
+        for line in file:
+            line_list.append(line.rstrip("\n"))
+    return line_list
 
 
 

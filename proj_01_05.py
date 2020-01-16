@@ -9,7 +9,11 @@ So we'll also be writing a test function for this one.
 #  Copy and paste your code here from previous exercise:
 
 def read_fileAsList( fname ):
-    pass
+    with open(fname, "r") as file:
+        line_list = []
+        for line in file:
+            line_list.append(line.rstrip("\n"))
+    return line_list
 
 
 # optional 01.06.  You can come back and do this LATER.
@@ -18,20 +22,30 @@ def find_lineWithTextInList(direction, somelist,  sometext, startingPoint = None
 
 
 # 01.05 - do this before 01.06.
-def extract_GutenText(lines):
+def extract_GutenText(line_list):
     # Look for "project gutenberg" before the mid point
     # I am including some sample code to get you started.....
     # Make sure you understand what this does BEFORE you copy it and modify it for below.
     # Also it's incomplete....
-    startpoint1 = len(lines) // 2   # note the integer division.
-    while """some condition here to prevent you from running off the beginning of the list """:
-        if "project gutenberg" in lines[startpoint1].lower():
+    startpoint1 = len(line_list) // 2   # note the integer division.
+    while startpoint1 >= 0:
+        if "project gutenberg" in line_list[startpoint1].lower():
+            #we have found the end of the 'header'
+            del line_list[0:startpoint1]
             break
         startpoint1 = startpoint1 - 1 # or alternatively:  startpoint1 -= 1
     # look for the first blank line after that point.
-
+    delpoint1 = 0
+    for line in line_list:
+        if line == '':
+            #blank line, we can start the body here
+            del line_list[0:delpoint1]
+            break
+        delpoint1 += 1
     # look for "project gutenberg" after the midpoint
-
+    startpoint2 = delpoint1
+    while startpoint2 <= len(line_list):
+        pass
     # look for the first blank line before that point
 
     # return a slice of the list that is just the text of the ebook.  Don't include the blank lines in the slice
