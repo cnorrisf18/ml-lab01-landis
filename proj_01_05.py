@@ -13,8 +13,24 @@ def read_fileAsList( fname ):
         return [  (line[:-1] if line[-1] == "\n" else line) for line in f.readlines()]
 
 # optional 01.06.  You can come back and do this LATER.
-def find_lineWithTextInList(direction, somelist,  sometext, startingPoint = None):
-    pass
+def find_lineWithTextInList(direction, somelist,  sometext, startingPoint = 0):
+    try:
+        while 0 < startingPoint < len(somelist):
+            if sometext in somelist[startingPoint].lower():
+                print("text found on line",startingPoint)
+                break
+            startingPoint += direction
+        while 0 < startingPoint < len(somelist):
+            if somelist[startingPoint].strip() == "":
+                print("blank text found on line",startingPoint)
+                break
+            startingPoint -= direction
+    except IndexError as e:
+        startingPoint = 0
+    return startingPoint
+
+
+
 
 
 # 01.05 - do this before 01.06.
@@ -24,24 +40,49 @@ def extract_GutenText(lines):
     # Make sure you understand what this does BEFORE you copy it and modify it for below.
     # Also it's incomplete....
     startpoint1 = len(lines) // 2   # note the integer division.
-    try:
-        while """some condition here to prevent you from running off the beginning of the list """:
-            if "project gutenberg" in lines[startpoint1].lower():
-                break
-            startpoint1 = startpoint1 - 1 # or alternatively:  startpoint1 -= 1
-    except IndexError as e:
-        # we had a an index out of bounds problem in the above code.
-        print("Error error - bounds error in finding start point!")  # in general it's not a good idea to print in your exceptions.
-        startpoint1 = 0
-
-    # look for the first blank line after that point.
-
-    # look for "project gutenberg" after the midpoint
-
-    # look for the first blank line before that point
-
-
-    result = a slice of the list that is just the text of the ebook.  Don't include the blank lines in the slice
+    startGut = find_lineWithTextInList(-1, lines, "project gutenberg", startpoint1)
+    endGut = find_lineWithTextInList(1, lines, "project gutenberg", startpoint1)
+    # try:
+    #     while startpoint1 > 0:
+    #         if "project gutenberg" in lines[startpoint1].lower():
+    #             #we have found the point where the header ends
+    #             print("Project gutenberg found on line", startpoint1)
+    #             break
+    #         startpoint1 = startpoint1 - 1 # or alternatively:  startpoint1 -= 1
+    # except IndexError as e:
+    #     # we had a an index out of bounds problem in the above code.
+    #     print("Error error - bounds error in finding start point!")  # in general it's not a good idea to print in your exceptions.
+    #     startpoint1 = 0
+    #
+    # # look for the first blank line after that point.
+    # while startpoint1 < len(lines):
+    #     if lines[startpoint1].strip() == "":
+    #         print("Header should start at ", startpoint1)
+    #         break
+    #     startpoint1 = startpoint1 + 1
+    #
+    # # look for "project gutenberg" after the midpoint
+    # startpoint2 = len(lines) // 2
+    # try:
+    #     while startpoint2 < len(lines):
+    #         if "project gutenberg" in lines[startpoint2].lower():
+    #             #we have found the point where the footer begins
+    #             print("Project gutenberg found on line", startpoint2)
+    #             break
+    #         startpoint2 = startpoint2 + 1
+    # except IndexError as e:
+    #     print("Bounds error in finding finish point!")
+    #     startpoint2 = len(lines)
+    #
+    # # look for the first blank line before that point
+    # while startpoint2 > 0:
+    #     if lines[startpoint2].strip() == "":
+    #         print("Footer should start at ", startpoint2)
+    #         break
+    #     startpoint2 = startpoint2-1
+    #
+    # result = lines[startpoint1 +1:startpoint2]
+    result = lines[startGut+1:endGut]
     if len(result) == 0:
         raise ValueError("Book is empty.  May not have the right start and end markers.")
     return result
