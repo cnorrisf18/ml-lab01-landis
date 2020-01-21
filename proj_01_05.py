@@ -9,12 +9,8 @@ So we'll also be writing a test function for this one.
 #  Copy and paste your code here from previous exercise:
 
 def read_fileAsList( fname ):
-    with open(fname, "r") as file:
-        line_list = []
-        for line in file:
-            line_list.append(line.rstrip("\n"))
-    return line_list
-
+    with  open(fname) as f:
+        return [  (line[:-1] if line[-1] == "\n" else line) for line in f.readlines()]
 
 # optional 01.06.  You can come back and do this LATER.
 def find_lineWithTextInList(direction, somelist,  sometext, startingPoint = None):
@@ -22,34 +18,33 @@ def find_lineWithTextInList(direction, somelist,  sometext, startingPoint = None
 
 
 # 01.05 - do this before 01.06.
-def extract_GutenText(line_list):
+def extract_GutenText(lines):
     # Look for "project gutenberg" before the mid point
     # I am including some sample code to get you started.....
     # Make sure you understand what this does BEFORE you copy it and modify it for below.
     # Also it's incomplete....
-    startpoint1 = len(line_list) // 2   # note the integer division.
-    while startpoint1 >= 0:
-        if "project gutenberg" in line_list[startpoint1].lower():
-            #we have found the end of the 'header'
-            del line_list[0:startpoint1]
-            break
-        startpoint1 = startpoint1 - 1 # or alternatively:  startpoint1 -= 1
+    startpoint1 = len(lines) // 2   # note the integer division.
+    try:
+        while """some condition here to prevent you from running off the beginning of the list """:
+            if "project gutenberg" in lines[startpoint1].lower():
+                break
+            startpoint1 = startpoint1 - 1 # or alternatively:  startpoint1 -= 1
+    except IndexError as e:
+        # we had a an index out of bounds problem in the above code.
+        print("Error error - bounds error in finding start point!")  # in general it's not a good idea to print in your exceptions.
+        startpoint1 = 0
+
     # look for the first blank line after that point.
-    delpoint1 = 0
-    for line in line_list:
-        if line == '':
-            #blank line, we can start the body here
-            del line_list[0:delpoint1]
-            break
-        delpoint1 += 1
+
     # look for "project gutenberg" after the midpoint
-    startpoint2 = delpoint1
-    while startpoint2 <= len(line_list):
-        pass
+
     # look for the first blank line before that point
 
-    # return a slice of the list that is just the text of the ebook.  Don't include the blank lines in the slice
-    return # something
+
+    result = a slice of the list that is just the text of the ebook.  Don't include the blank lines in the slice
+    if len(result) == 0:
+        raise ValueError("Book is empty.  May not have the right start and end markers.")
+    return result
 
 
 
@@ -80,44 +75,20 @@ def test_basic_extract_GutenText():
     assert actualtextlines[0] == "    guten text is here!", f"testtext1 is wrong: {'|'.join(actualtextlines)}"
 
 
-
-#  Part 01.08
-#   Use the parse code to write the sonnet index function
-#
-from proj_01_parse import parseNextSonnet
-
-
-def sonnetIndex(sonnetText: [str]) -> [(str, [str])]:
-    pass # remove this line.  It's here just to make the function not show a syntax error.
-
-
-
-#  Part 01.09
-#
-#
-def fetchAndPrintSonnet():
-    # use read_fileAsList to read the sonnet file, and store the lines in a variable
-    # use extract_GutenText with the variable above, and store just the sonnet text
-    # use sonnetIndex with the variable above and extract a list of (title, sonnet) pairs
-    #    store the result in variable "sonnets" so that it is compatible with the code below...
-
-    # now let's prompt the user for a sonnet and display it.  Try 0.
-    s = ""
-    while s.lower() != "done":
-        s = input("Which sonnet? or done to end")
-        if s != 'done':
-            try:
-                (title, sonnet) = sonnets[int(s)]
-            except ValueError as verr:
-                print("I can't convert what you typed to an integer")
-            except IndexError as ierr:
-                print(f"Sonnets go from 0 to {len(sonnets)}")
-        print(f"*** {title} ***")
-        print("\n".join(sonnet))
+"""
+This SHOULD raise an exception - specifically a ValueError.
+"""
+from nose.tools import *
+@raises(ValueError)
+def test_empty_GutenText():
+    text="""This text has
+    no
+    marker for start or end of book.
+    """.split("\n")
+    lines = extract_GutenText(text)  # This should throw an exception.  And Nose is expecting a "ValueError" exception.
 
 
 
-if __name__ == "__main__":
-    # This code only runs when you run this python file directly.
-    pass
+
+
 

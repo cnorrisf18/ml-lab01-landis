@@ -1,0 +1,20 @@
+
+
+In this file, write some notes to explore Markov Chains.
+
+http://setosa.io/ev/markov-chains/
+
+After you've read and played...
+
+Paste into this file  your list so that:
+When the state is A, Chances are 80 % that the state remains in A, 20% go to B, and 0% go to C.
+When the state is B, 100% chance the state will go to C.
+When the state is C, 80% chance it'll go to B,  20% chance it'll go to A.
+
+
+Here:
+
+
+
+Don't forget to commit and push the file.
+

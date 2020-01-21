@@ -47,3 +47,45 @@ def parseNextSonnet(startIndex: int, sonnetText: [str]) -> (int, str, [str]):
     return (i, title, body)
 
 
+"""
+Usage
+#  Part 01.08
+#   Use the parse code to write the sonnet index function
+#
+from proj_01_parse import parseNextSonnet
+
+
+def sonnetIndex(sonnetText: [str]) -> [(str, [str])]:
+    pass # remove this line.  It's here just to make the function not show a syntax error.
+
+
+def sonnetIndex(sonnetText: [str]) -> [(str, [str])]:
+    sonnets = []
+    positionInText = 0
+    while positionInText < len(sonnetText):
+        (positionInText, title, sonnet) = parseNextSonnet(positionInText, sonnetText)
+        sonnets.append( (title, sonnet))
+    return sonnets
+
+
+
+def fetchAndPrintSonnet():
+    gutenText = read_fileAsList('wssnt10.txt')
+    sonnetsText = extract_GutenText(gutenText)
+    sonnets = sonnetIndex(sonnetsText)
+
+    s = ""
+    while s.lower() != "done":
+        s = input("Which sonnet? or done to end")
+        if s != 'done':
+            try:
+                (title, sonnet) = sonnets[int(s)]
+            except ValueError as verr:
+                print("I can't convert what you typed to an integer")
+            except IndexError as ierr:
+                print(f"Sonnets go from 0 to {len(sonnets)}")
+        print(f"*** {title} ***")
+        print("\n".join(sonnet))
+
+
+"""
