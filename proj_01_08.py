@@ -72,13 +72,18 @@ startURL = 'https://www.gutenberg.org/ebooks/search/?sort_order=random&query=l.e
 r = requests.get(startURL)
 soup = BeautifulSoup(r.text, "html.parser")
 # find all the links in the gutenberg query.
-links = soup.find_all("a", class_="link")
+links = soup.find_all("a")
 # Go through and build a list of the book numbers out of the matching links.
 booknums = []
 for link in links:
     regex = r".*/(\d+)"
-    test_str = link.get('href')
-    matches = re.match(regex, test_str, re.IGNORECASE)
+    test_str = link.get('src')
+    try:
+        matches = re.match(regex, test_str, re.IGNORECASE)
+    except:
+        matches = False
+        print("FAILURE",link,"does not have an image file")
+        pass
     if matches:
         print(f"Matched: {matches[1]} - {test_str}")
         booknums.append(matches[1])

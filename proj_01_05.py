@@ -16,18 +16,20 @@ def read_fileAsList( fname ):
 def find_lineWithTextInList(direction, somelist,  sometext, startingPoint = 0):
     try:
         while 0 < startingPoint < len(somelist):
-            if sometext in somelist[startingPoint].lower():
+            if sometext.lower() in somelist[startingPoint].lower():
                 print("text found on line",startingPoint)
                 break
             startingPoint += direction
         while 0 < startingPoint < len(somelist):
             if somelist[startingPoint].strip() == "":
                 print("blank text found on line",startingPoint)
-                break
+                return startingPoint
             startingPoint -= direction
     except IndexError as e:
+        print("index error")
         startingPoint = 0
-    return startingPoint
+    print("starting point is",startingPoint)
+    return False
 
 
 
@@ -39,7 +41,7 @@ def extract_GutenText(lines):
     # I am including some sample code to get you started.....
     # Make sure you understand what this does BEFORE you copy it and modify it for below.
     # Also it's incomplete....
-    startpoint1 = len(lines) // 2   # note the integer division.
+    startpoint1 = (len(lines) // 2)- 1   # note the integer division.
     startGut = find_lineWithTextInList(-1, lines, "project gutenberg", startpoint1)
     endGut = find_lineWithTextInList(1, lines, "project gutenberg", startpoint1)
     # try:
@@ -82,7 +84,12 @@ def extract_GutenText(lines):
     #     startpoint2 = startpoint2-1
     #
     # result = lines[startpoint1 +1:startpoint2]
-    result = lines[startGut+1:endGut]
+    print(startGut,endGut)
+    if endGut is False and startGut is not False:
+        result = lines[startGut+1:]
+    else:
+        result = lines[startGut+1:endGut]
+    print(result)
     if len(result) == 0:
         raise ValueError("Book is empty.  May not have the right start and end markers.")
     return result
@@ -130,6 +137,41 @@ def test_empty_GutenText():
 
 
 
+@raises(ValueError)
+def test_totally_empty_GutenText():
+    text=""
+    lines=extract_GutenText(text)
 
 
 
+@raises(ValueError)
+def test_multiple_GutenTexts():
+    text="""Project Gutenberg
+    Project Gutenberg
+    Project Gutenberg
+    Project Gutenberg
+    Project Gutenberg
+    Project Gutenberg
+    Project Gutenberg
+    Project Gutenberg
+    Project Gutenberg
+    """.split("\n")
+    print(text, len(text))
+    lines = extract_GutenText(text)
+    assert len(lines) == 0, "there is no start or finish to this text, so there should be an empty result"
+
+
+def test_only_one_GutenText():
+    text="""This is a test example
+    *** Project GUTENberg should start here after the blank line ***
+    *** and not include this line or the blank line after this one **
+    
+    guten text is here!
+    
+    ** some nonlank line **
+    *** text should end here but the blank line before it should also not be included ***
+    ** none of this should show up
+    """.split("\n")
+    lines = extract_GutenText(text)
+    assert lines[0] == "    guten text is here!", "there is no end point so just go after the start"
+    assert len(lines) == len(text) - 4 , f"{len(text)-4} should be the length of text but {len(lines)} is the length of the text!"
